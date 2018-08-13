@@ -1,0 +1,4 @@
+#!/bin/sh
+# remove all branches except current one
+
+git branch | grep -v ^* | xargs git branch -D
