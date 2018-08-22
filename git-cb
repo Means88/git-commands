@@ -1,4 +1,10 @@
 #!/bin/sh
 # remove all branches except current one
 
-git branch | grep -v ^* | xargs git branch -D
+ARGS=$(echo "$@" | awk '{$1=$1};1')
+
+if [ "$ARGS" == '' ]; then
+  git branch | grep -v ^* | xargs git branch -D
+else
+  git branch | grep -v ^* | grep "$ARGS" | xargs git branch -D
+fi
