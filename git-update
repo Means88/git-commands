@@ -1,0 +1,21 @@
+#!/bin/sh
+# update branch from remote branches (ff-only)
+
+STATUS=$(git status -s)
+if [ "$STATUS" != "" ]; then
+  echo "Git is not clean"
+  exit 1
+fi
+
+ORIGIN_NAME="origin"
+if [ "$1" != "" ]; then
+  ORIGIN_NAME="$1"
+fi
+
+BRANCH_NAME="master"
+if [ "$2" != "" ]; then
+  BRANCH_NAME="$2"
+fi
+
+git fetch "$ORIGIN_NAME" "$BRANCH_NAME" &&
+git merge "$ORIGIN_NAME"/"$BRANCH_NAME" --ff-only
