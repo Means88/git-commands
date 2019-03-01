@@ -1,7 +1,9 @@
 #!/bin/sh
 # squash commit from <hash> to HEAD
+# USAGE:
+# git squash <ref>
 
-HINT="git squash <hash>"
+HINT="git squash <ref>"
 
 STATUS=$(git status -s)
 if [ "$STATUS" != "" ]; then

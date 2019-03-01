@@ -2,8 +2,9 @@
 
 COMMANDS=(
   "git-cb"
+  "git-rb"
   "git-squash"
-  "git-update"
+  "git-update",
 )
 BASEDIR="$( cd "$(dirname "$0")" ; pwd -P )"
 FORCE=false
