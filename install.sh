@@ -4,7 +4,8 @@ COMMANDS=(
   "git-cb"
   "git-rb"
   "git-squash"
-  "git-update",
+  "git-stat"
+  "git-update"
 )
 BASEDIR="$( cd "$(dirname "$0")" ; pwd -P )"
 FORCE=false
