@@ -4,6 +4,9 @@
 # git squash <ref>
 
 HINT="git squash <ref>"
+ARGS=("$@")
+HASH="${ARGS[0]}"
+REST="${ARGS[@]:1}"
 
 STATUS=$(git status -s)
 if [ "$STATUS" != "" ]; then
@@ -13,31 +16,23 @@ fi
 
 CURRENT_HASH=$(git log --pretty=format:'%H' HEAD^..HEAD)
 
-if [ "$1" == "" ]; then
+if [ "$HASH" == "" ]; then
   echo "Hash must be specified"
   echo ""
-  echo "\033[1mUSAGE:\033[0m " $HINT
+  echo "\033[1mUSAGE:\033[0m " "$HINT"
   echo ""
   exit 1
 fi
 
-OUTPUT=$(git log --graph --pretty=format:'%s' $1..HEAD)
+OUTPUT=$(git log --graph --pretty=format:'%s' "$HASH"..HEAD)
 TEMPFILE=$(mktemp /tmp/git-squash-commit-XXXXX)
-trap "rm -f $TEMPFILE" exit
+trap "rm -f \"$TEMPFILE\"" exit
 
-echo '\n' >> $TEMPFILE
-git log --graph --pretty=format:'%s' $1..HEAD >> $TEMPFILE
-echo '' >> $TEMPFILE
+echo '\n' >> "$TEMPFILE"
+git log --graph --pretty=format:'%s' "$HASH"..HEAD >> "$TEMPFILE"
+echo '' >> "$TEMPFILE"
 
-git reset --soft "$1"
+trap "git reset --hard \"$CURRENT_HASH\"" INT QUIT ABRT TERM
 
-if [ "$?" != "0" ]; then
-  git reset --hard $CURRENT_HASH
-  exit 1
-fi
-
-git commit -t $TEMPFILE
-if [ "$?" != "0" ]; then
-  git reset --hard $CURRENT_HASH
-  exit 1
-fi
+git reset --soft "$HASH"
+git commit $REST -t "$TEMPFILE"
